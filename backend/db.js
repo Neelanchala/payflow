@@ -4,16 +4,32 @@ const path = require('path');
 const dbPath = path.join(__dirname, 'database.db');
 const db = new sqlite3.Database(dbPath);
 
-// Enable WAL
+// ================= INIT =================
 db.serialize(() => {
   db.run('PRAGMA journal_mode = WAL');
 
+  // ✅ CREATE TABLE FIRST
   db.run(`CREATE TABLE IF NOT EXISTS merchants (
     id TEXT PRIMARY KEY,
     shop_name TEXT NOT NULL,
+    password TEXT,
     upi_id TEXT
   )`);
 
+  // ✅ SAFE MIGRATION (IMPORTANT)
+  db.run(`ALTER TABLE merchants ADD COLUMN password TEXT`, (err) => {
+    if (err) {
+      if (err.message.includes("duplicate column")) {
+        console.log("ℹ️ password column already exists");
+      } else {
+        console.error("❌ ALTER TABLE error:", err.message);
+      }
+    } else {
+      console.log("✅ password column added");
+    }
+  });
+
+  // ================= OTHER TABLES =================
   db.run(`CREATE TABLE IF NOT EXISTS inventory (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     merchant_id TEXT NOT NULL,
