@@ -1,14 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-  loadProducts();
-  setupAddProduct();
+  const merchantId = localStorage.getItem('merchant_id');
+  const token = localStorage.getItem('token');
+
+  // 🔒 Strong auth check
+  if (!merchantId || !token) {
+    console.warn("Auth missing → redirect");
+    window.location.href = '/index.html';
+    return;
+  }
+
+  loadProducts(merchantId);
+  setupAddProduct(merchantId);
 });
 
-/* ================= LOAD PRODUCTS ================= */
-async function loadProducts() {
-  try {
-    const merchantId = api.getMerchantId();
-    if (!merchantId) return;
 
+/* ================= LOAD PRODUCTS ================= */
+async function loadProducts(merchantId) {
+  try {
     const products = await api.get('/inventory', {
       merchant_id: merchantId
     });
@@ -63,16 +71,14 @@ async function loadProducts() {
   }
 }
 
+
 /* ================= ADD PRODUCT ================= */
-function setupAddProduct() {
+function setupAddProduct(merchantId) {
   const form = document.getElementById('add-product-form');
   if (!form) return;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const merchantId = api.getMerchantId();
-    if (!merchantId) return;
 
     const name = document.getElementById('item-name').value.trim();
     const price = document.getElementById('item-price').value;
@@ -100,7 +106,7 @@ function setupAddProduct() {
       successEl.textContent = "Product added successfully";
 
       form.reset();
-      loadProducts();
+      loadProducts(merchantId);
 
       setTimeout(() => {
         successEl.textContent = '';
@@ -112,10 +118,15 @@ function setupAddProduct() {
   });
 }
 
+
 /* ================= DELETE PRODUCT ================= */
 async function deleteProduct(id) {
-  const merchantId = api.getMerchantId();
-  if (!merchantId) return;
+  const merchantId = localStorage.getItem('merchant_id');
+
+  if (!merchantId) {
+    window.location.href = '/index.html';
+    return;
+  }
 
   if (!confirm("Delete this product?")) return;
 
@@ -124,12 +135,13 @@ async function deleteProduct(id) {
       merchant_id: merchantId
     });
 
-    loadProducts();
+    loadProducts(merchantId);
 
   } catch (err) {
     alert(err.message);
   }
 }
+
 
 /* ================= ESCAPE HTML ================= */
 function escHtml(s) {

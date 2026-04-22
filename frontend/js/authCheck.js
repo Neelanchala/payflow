@@ -1,30 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ✅ Ensure API is loaded
-  if (!window.api || typeof api.getMerchantId !== 'function') {
-    console.error("API not loaded properly");
-    window.location.href = '/index.html';
+  // ✅ Wait for API to exist (prevents race condition)
+  if (!window.api) {
+    console.error("API not loaded");
     return;
   }
 
-  const merchantId = api.getMerchantId();
+  // ✅ SAFE auth check
+  const merchantId = localStorage.getItem('merchant_id');
+  const token = localStorage.getItem('token');
 
-  // 🔒 Proper protection (no broken state)
-  if (!merchantId) {
-    console.warn("merchant_id missing → redirecting");
-    if (window.location.pathname !== '/index.html') {
+  // 🔒 Only redirect if BOTH missing
+  if (!merchantId || !token) {
+    console.warn("Auth missing → redirecting");
+
+    // Prevent redirect loop
+    if (!window.location.pathname.includes('index.html')) {
       window.location.href = '/index.html';
     }
+
     return;
   }
 
+  // ✅ Everything OK → continue
   setNavInfo(merchantId);
 });
+
 
 /* ================= NAV ================= */
 
 function setNavInfo(merchantId) {
-  const shopName = api.getShopName() || "My Shop";
+  const shopName = localStorage.getItem('shop_name') || "My Shop";
   const el = document.getElementById('nav-shop-name');
 
   if (el) {
@@ -33,6 +39,7 @@ function setNavInfo(merchantId) {
 
   loadNotifBadge(merchantId);
 }
+
 
 /* ================= NOTIFICATIONS ================= */
 
@@ -44,7 +51,6 @@ async function loadNotifBadge(merchantId) {
       merchant_id: merchantId
     });
 
-    // ✅ Safe extraction
     const unreadCount =
       res?.unreadCount ??
       res?.data?.unreadCount ??
@@ -54,21 +60,13 @@ async function loadNotifBadge(merchantId) {
 
     if (!badge) return;
 
-    if (unreadCount > 0) {
-      badge.textContent = unreadCount;
-      badge.style.display = 'inline-flex';
-    } else {
-      badge.textContent = '';
-      badge.style.display = 'none';
-    }
+    badge.textContent = unreadCount > 0 ? unreadCount : '';
+    badge.style.display = unreadCount > 0 ? 'inline-flex' : 'none';
 
   } catch (e) {
     console.error("Notification error:", e.message);
 
-    // ✅ fallback: hide badge on error
     const badge = document.getElementById('notif-badge');
-    if (badge) {
-      badge.style.display = 'none';
-    }
+    if (badge) badge.style.display = 'none';
   }
 }
