@@ -56,12 +56,12 @@ async function request(method, endpoint, data = null) {
 
   // 🔴 Handle auth failure globally
   if (res.status === 401) {
-    localStorage.clear();
-    if (window.location.pathname !== '/index.html') {
-      window.location.href = '/index.html';
-    }
-    throw new Error("Session expired");
+  localStorage.clear();
+  if (window.location.pathname !== '/index.html') {
+    window.location.href = '/index.html';
   }
+  throw new Error("Session expired");
+ }
 
   // ✅ Standard error handling
   if (!res.ok || (json && json.success === false)) {
