@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customers - PayFlow</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<body>
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+<div id="sidebar-container"></div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>Customers</h1>
+      <p>Manage your customer records and transaction history.</p>
+    </div>
+
+    <!-- FIXED GRID -->
+    <div class="customers-grid">
+
+      <!-- ADD CUSTOMER -->
+      <div class="card">
+        <div class="card-title">Add Customer</div>
+
+        <form id="add-customer-form">
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="cust-name" class="form-control" placeholder="Customer name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Phone (Optional)</label>
+            <input type="tel" id="cust-phone" class="form-control" placeholder="+91...">
+          </div>
+
+          <p id="cust-error" class="error-msg"></p>
+          <p id="cust-success" class="success-msg"></p>
+
+          <button type="submit" class="btn btn-primary btn-full">Add Customer</button>
+        </form>
+      </div>
+
+      <!-- INFO PANEL -->
+      <div class="card">
+        <div class="card-title">Customer Info</div>
+
+        <ul class="customers-info">
+          <li>✔ Track customer purchases</li>
+          <li>✔ Manage credit history</li>
+          <li>✔ View transaction details</li>
+          <li>✔ Build repeat customer base</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card customers-table-card">
+      <div class="card-title">All Customers</div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>ID</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+
+          <tbody id="cust-table-body">
+          <tr>
+            <td colspan="4" style="text-align:center">Loading...</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="history-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="history-content"></div>
+  </div>
+</div>
+<script src="/js/api.js"></script>
+<script src="/js/authCheck.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/customers.js"></script>
+<script src="/js/theme.js"></script>
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('.sidebar-nav a');
+
+  links.forEach(link => {
+    if (link.href.includes('customers.html')) {
+      link.classList.add('active');
+    }
+  });
+});
+function closeModal() {
+  const modal = document.getElementById('history-modal');
+  if (modal) modal.style.display = 'none';
+}
+</script>
+
+</body>
+</html>

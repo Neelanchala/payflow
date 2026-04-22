@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notifications - PayFlow</title>
+
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar-container"></div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h1>Notifications</h1>
+        <p>Low stock alerts, high expense warnings, and system messages.</p>
+      </div>
+
+      <button id="mark-all-btn" class="btn btn-secondary btn-sm">
+        Mark All Read
+      </button>
+    </div>
+
+    <p id="unread-count" style="color:#64748b;margin-bottom:16px;font-size:0.9rem"></p>
+    <p id="notif-error" class="error-msg"></p>
+
+    <div class="card" style="padding:0">
+      <div id="notif-list">
+        <div class="empty-state" style="padding:20px;text-align:center;color:#888;">
+          Loading notifications...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- SCRIPTS -->
+<script src="/js/api.js"></script>
+<script src="/js/authCheck.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/notifications.js"></script>
+<script src="/js/theme.js"></script>
+
+<script>
+// Safe sidebar toggle
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
+}
+
+// Page-specific logic ONLY
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Highlight active nav
+  const links = document.querySelectorAll('.sidebar-nav a');
+
+  links.forEach(link => {
+    if (link.href.includes('notifications.html')) {
+      link.classList.add('active');
+    }
+  });
+
+});
+</script>
+
+</body>
+</html>

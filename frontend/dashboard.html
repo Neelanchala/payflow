@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - PayFlow</title>
+
+  <link rel="stylesheet" href="/css/styles.css"/>
+
+  <style>
+    .stat-card {
+      transition: 0.25s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar-container"></div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Welcome back! Here's your business overview.</p>
+    </div>
+
+    <p id="dashboard-error" class="error-msg"></p>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" id="total-revenue">₹0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Transactions</div>
+        <div class="stat-value" id="total-transactions">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Avg Order</div>
+        <div class="stat-value" id="avg-order">₹0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Expenses</div>
+        <div class="stat-value" id="total-expenses">₹0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Profit</div>
+        <div class="stat-value green" id="profit">₹0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Credit</div>
+        <div class="stat-value red" id="unpaid-count">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Low Stock</div>
+        <div class="stat-value red" id="low-stock">0</div>
+      </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-grid">
+
+      <!-- TRANSACTIONS -->
+      <div class="card">
+        <div class="card-title">Recent Transactions</div>
+
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recent-txns">
+              <tr>
+                <td colspan="5" style="text-align:center;color:#888;">
+                  Loading transactions...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="card">
+        <div class="card-title">Quick Actions</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="/sell.html" class="btn btn-primary">+ New Sale</a>
+          <a href="/expenses.html" class="btn btn-secondary">+ Add Expense</a>
+
+          <a href="#" id="export-txn-btn" class="btn btn-secondary">
+            Export Transactions CSV
+          </a>
+
+          <a href="#" id="export-exp-btn" class="btn btn-secondary">
+            Export Expenses CSV
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<!-- SCRIPTS -->
+<script src="/js/api.js"></script>
+<script src="/js/authCheck.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/dashboard.js"></script>
+<script src="/js/theme.js"></script>
+
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
+}
+
+// Page-specific logic ONLY
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Active nav highlight
+  const links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(link => {
+    if (link.href.includes('dashboard.html')) {
+      link.classList.add('active');
+    }
+  });
+
+  // Export links
+  const mid = localStorage.getItem('merchant_id');
+
+  if (mid) {
+    const txnBtn = document.getElementById('export-txn-btn');
+    const expBtn = document.getElementById('export-exp-btn');
+
+    if (txnBtn) {
+      txnBtn.href = `/api/export/transactions?merchant_id=${mid}`;
+    }
+
+    if (expBtn) {
+      expBtn.href = `/api/export/expenses?merchant_id=${mid}`;
+    }
+  }
+
+});
+</script>
+
+</body>
+</html>

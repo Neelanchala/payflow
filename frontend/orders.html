@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Price Compare - PayFlow</title>
+
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<body>
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar-container"></div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>Price Compare</h1>
+      <p>Compare sample prices across platforms (demo).</p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card search-card">
+
+      <form id="search-form" class="search-bar">
+        <input 
+          type="text" 
+          id="search-input" 
+          class="form-control"
+          placeholder="Search product (rice, oil, dal...)"
+        />
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <p id="order-error" class="error-msg"></p>
+
+      <div id="search-result" class="search-results"></div>
+
+    </div>
+
+    <!-- CATALOG -->
+    <div class="card">
+
+      <div class="card-title">Product Catalog</div>
+
+      <div class="catalog-grid" id="catalog-grid">
+        <div class="empty-state">Loading products...</div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+<script src="/js/api.js"></script>
+<script src="/js/authCheck.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/orders.js"></script> <!-- ADD THIS -->
+<script src="/js/theme.js"></script>
+<script>
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

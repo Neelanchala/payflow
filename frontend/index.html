@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - PayFlow</title>
+
+  <link rel="stylesheet" href="/css/styles.css"/>
+
+  <!-- ✅ ADD THIS (CRITICAL) -->
+  <script>
+    window.GOOGLE_CLIENT_ID = "840729148521-12com6cmddb3mpk6hilr57lop4sfcrd5.apps.googleusercontent.com";
+  </script>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body class="login-page">
+
+<div class="login-container">
+  <div class="login-card">
+
+    <h1 class="login-logo">PayFlow</h1>
+    <p class="login-subtitle">Start your business in seconds</p>
+
+    <!-- ================= GOOGLE ================= -->
+    <div id="google-section">
+      <p class="section-title">Sign in with Google</p>
+      <div id="google-btn"></div>
+    </div>
+
+    <!-- ================= SETUP ================= -->
+    <div id="setup-section" style="display:none; margin-top:20px;">
+
+      <p class="section-title">Setup your shop</p>
+
+      <div class="form-group">
+        <input type="text" id="shop-name" class="form-control"
+               placeholder="Enter your shop name">
+      </div>
+
+      <div class="form-group">
+        <input type="password" id="password" class="form-control"
+               placeholder="Set a password">
+      </div>
+
+      <div class="form-group">
+        <div class="upload-box" id="upload-box">
+          <input type="file" id="shop-logo" accept="image/*" hidden>
+          <div id="upload-placeholder">Click to upload logo</div>
+          <img id="logo-preview" class="logo-preview" style="display:none;" />
+        </div>
+      </div>
+
+      <button id="continue-btn" class="btn btn-primary btn-full">
+        Enter Dashboard
+      </button>
+    </div>
+
+    <!-- ================= LOGIN ================= -->
+    <div id="login-section" style="display:none; margin-top:20px;">
+
+      <p class="section-title">Enter Password</p>
+
+      <div class="form-group">
+        <input type="password" id="login-password" class="form-control"
+               placeholder="Enter your password">
+      </div>
+
+      <button id="login-btn" class="btn btn-primary btn-full">
+        Login
+      </button>
+
+    </div>
+
+    <!-- ERROR -->
+    <p id="login-error" class="error-msg"></p>
+
+  </div>
+</div>
+
+<!-- ✅ ORDER MATTERS -->
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/theme.js"></script>
+
+</body>
+</html>

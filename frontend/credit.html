@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Credit - PayFlow</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+
+<body>
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+<div id="sidebar-container"></div>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <div class="page-header">
+      <h1>Credit / Unpaid</h1>
+      <p>Manage all pending customer payments.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-label">Outstanding Credit</div>
+        <div class="stat-value red" id="total-credit">₹0</div>
+      </div>
+
+    </div>
+
+    <p id="credit-error" class="error-msg"></p>
+    <p id="credit-success" class="success-msg"></p>
+
+    <!-- GRID -->
+    <div class="credit-grid">
+
+      <!-- INFO PANEL -->
+      <div class="card">
+        <div class="card-title">Credit Insights</div>
+
+        <ul class="credit-info">
+          <li>✔ Track unpaid transactions</li>
+          <li>✔ Identify frequent credit customers</li>
+          <li>✔ Reduce delayed payments</li>
+          <li>✔ Improve cash flow</li>
+        </ul>
+      </div>
+
+      <!-- ACTION PANEL -->
+      <div class="card">
+        <div class="card-title">Quick Tips</div>
+
+        <ul class="credit-info">
+          <li>✔ Follow up on old dues</li>
+          <li>✔ Offer digital payment options</li>
+          <li>✔ Set credit limits</li>
+          <li>✔ Track payment history</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card credit-table-card">
+      <div class="card-title">Unpaid Transactions</div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+
+          <tbody id="credit-table-body">
+          <tr>
+            <td colspan="6" style="text-align:center">Loading...</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="/js/api.js"></script>
+<script src="/js/authCheck.js"></script>
+<script src="/js/layout.js"></script>
+<script src="/js/credit.js"></script>
+<script src="/js/theme.js"></script>
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.toggle('open');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('.sidebar-nav a');
+
+  links.forEach(link => {
+    if (link.href.includes('credit.html')) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
