@@ -132,11 +132,12 @@ window.api = api;
 function getHeaders() {
   const token = localStorage.getItem('token');
 
+  console.log("TOKEN:", token); // 👈 ADD THIS
+
   const headers = {
     'Content-Type': 'application/json'
   };
 
-  // ✅ Attach JWT if available
   if (token && token !== "undefined" && token !== "null") {
     headers['Authorization'] = `Bearer ${token}`;
   }
