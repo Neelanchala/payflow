@@ -55,13 +55,21 @@ async function request(method, endpoint, data = null) {
   }
 
   // 🔴 Handle auth failure globally
-  if (res.status === 401) {
-  localStorage.clear();
-  if (window.location.pathname !== '/index.html') {
+ if (res.status === 401) {
+  console.warn("Unauthorized request");
+
+  // ❌ DO NOT nuke everything blindly
+  localStorage.removeItem('token');
+
+  // optional: keep merchant_id for recovery
+  // localStorage.removeItem('merchant_id');
+
+  if (!window.location.pathname.includes('index.html')) {
     window.location.href = '/index.html';
   }
-  throw new Error("Session expired");
- }
+
+  throw new Error("Session expired. Please login again.");
+}
 
   // ✅ Standard error handling
   if (!res.ok || (json && json.success === false)) {
@@ -93,7 +101,7 @@ const api = {
     const id = localStorage.getItem('merchant_id');
 
     if (!id || id === "undefined" || id === "null") {
-      console.warn("merchant_id missing");
+      
       return null;
     }
 
@@ -105,8 +113,11 @@ const api = {
   },
 
   isLoggedIn() {
-    return !!localStorage.getItem('merchant_id');
-  },
+  const id = localStorage.getItem('merchant_id');
+  const token = localStorage.getItem('token');
+
+  return !!(id && token);
+ },
 
   logout() {
     localStorage.clear();
