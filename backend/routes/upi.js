@@ -3,7 +3,29 @@ const router = express.Router();
 const db = require('../db');
 const { successResponse, errorResponse, generateReference } = require('../utils/helpers');
 
-// ================= GET UPI =================
+/* ================= ENSURE MERCHANT ================= */
+async function ensureMerchant(merchant_id) {
+  let merchant = await db.getAsync(
+    'SELECT * FROM merchants WHERE id = ?',
+    [merchant_id]
+  );
+
+  if (!merchant) {
+    await db.runAsync(
+      'INSERT INTO merchants (id, shop_name) VALUES (?, ?)',
+      [merchant_id, 'My Shop']
+    );
+
+    merchant = await db.getAsync(
+      'SELECT * FROM merchants WHERE id = ?',
+      [merchant_id]
+    );
+  }
+
+  return merchant;
+}
+
+/* ================= GET UPI ================= */
 router.get('/', async (req, res) => {
   try {
     const { merchant_id } = req.query;
@@ -12,14 +34,7 @@ router.get('/', async (req, res) => {
       return errorResponse(res, 'merchant_id is required', 400);
     }
 
-    const merchant = await db.getAsync(
-      'SELECT upi_id FROM merchants WHERE id = ?',
-      [merchant_id]
-    );
-
-    if (!merchant) {
-      return errorResponse(res, 'Merchant not found', 404);
-    }
+    const merchant = await ensureMerchant(merchant_id);
 
     return successResponse(res, {
       upi_id: merchant.upi_id || null
@@ -30,7 +45,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ================= SAVE UPI =================
+/* ================= SAVE UPI ================= */
 router.post('/save', async (req, res) => {
   try {
     const { merchant_id, upi_id } = req.body;
@@ -43,15 +58,7 @@ router.post('/save', async (req, res) => {
       return errorResponse(res, 'upi_id is required', 400);
     }
 
-    // ✅ CHECK MERCHANT EXISTS FIRST
-    const merchant = await db.getAsync(
-      'SELECT * FROM merchants WHERE id = ?',
-      [merchant_id]
-    );
-
-    if (!merchant) {
-      return errorResponse(res, 'Merchant not found', 404);
-    }
+    await ensureMerchant(merchant_id);
 
     await db.runAsync(
       'UPDATE merchants SET upi_id = ? WHERE id = ?',
@@ -68,7 +75,7 @@ router.post('/save', async (req, res) => {
   }
 });
 
-// ================= GENERATE QR =================
+/* ================= GENERATE QR ================= */
 router.post('/generate-qr', async (req, res) => {
   try {
     const { merchant_id, amount } = req.body;
@@ -81,14 +88,7 @@ router.post('/generate-qr', async (req, res) => {
       return errorResponse(res, 'Valid amount is required', 400);
     }
 
-    const merchant = await db.getAsync(
-      'SELECT upi_id FROM merchants WHERE id = ?',
-      [merchant_id]
-    );
-
-    if (!merchant) {
-      return errorResponse(res, 'Merchant not found', 404);
-    }
+    const merchant = await ensureMerchant(merchant_id);
 
     if (!merchant.upi_id) {
       return errorResponse(
@@ -113,7 +113,7 @@ router.post('/generate-qr', async (req, res) => {
   }
 });
 
-// ================= CONFIRM PAYMENT =================
+/* ================= CONFIRM PAYMENT ================= */
 router.post('/confirm', async (req, res) => {
   try {
     const { merchant_id, amount, customer_id } = req.body;
@@ -125,6 +125,8 @@ router.post('/confirm', async (req, res) => {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       return errorResponse(res, 'Valid amount is required', 400);
     }
+
+    await ensureMerchant(merchant_id);
 
     const reference = generateReference('UPI');
 

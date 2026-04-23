@@ -6,9 +6,10 @@ const db = new sqlite3.Database(dbPath);
 
 // ================= INIT =================
 db.serialize(() => {
+
   db.run('PRAGMA journal_mode = WAL');
 
-  // ✅ CREATE TABLE FIRST
+  // ================= MERCHANTS =================
   db.run(`CREATE TABLE IF NOT EXISTS merchants (
     id TEXT PRIMARY KEY,
     shop_name TEXT NOT NULL,
@@ -16,16 +17,27 @@ db.serialize(() => {
     upi_id TEXT
   )`);
 
-  // ✅ SAFE MIGRATION (IMPORTANT)
+  // SAFE MIGRATION (password)
   db.run(`ALTER TABLE merchants ADD COLUMN password TEXT`, (err) => {
-    if (err) {
-      if (err.message.includes("duplicate column")) {
-        console.log("ℹ️ password column already exists");
-      } else {
-        console.error("❌ ALTER TABLE error:", err.message);
-      }
+    if (err && !err.message.includes("duplicate column")) {
+      console.error("❌ password alter error:", err.message);
+    }
+  });
+
+  // ================= CUSTOMERS =================
+  db.run(`CREATE TABLE IF NOT EXISTS customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    merchant_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT
+  )`);
+
+  // 🔥 NOW ALTER (correct position)
+  db.run(`ALTER TABLE customers ADD COLUMN total_due REAL DEFAULT 0`, (err) => {
+    if (err && !err.message.includes("duplicate column")) {
+      console.error("❌ total_due error:", err.message);
     } else {
-      console.log("✅ password column added");
+      console.log("ℹ️ total_due ready");
     }
   });
 
@@ -36,13 +48,6 @@ db.serialize(() => {
     name TEXT NOT NULL,
     price REAL NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 0
-  )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS customers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    merchant_id TEXT NOT NULL,
-    name TEXT NOT NULL,
-    phone TEXT
   )`);
 
   db.run(`CREATE TABLE IF NOT EXISTS transactions (
@@ -70,6 +75,7 @@ db.serialize(() => {
     read INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
+
 });
 
 // Promises (same API you already use)
