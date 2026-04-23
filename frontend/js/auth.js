@@ -15,10 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let logoBase64 = "";
 
   /* ================= PREVENT RELOGIN ================= */
-  if (localStorage.getItem('merchant_id')) {
-    window.location.href = "/dashboard.html";
-    return;
-  }
+  const merchantId = localStorage.getItem('merchant_id');
+  const token = localStorage.getItem('token');
+
+if (merchantId && token) {
+  window.location.href = "/dashboard.html";
+  return;
+}
 
   function resetUI() {
     if (setupSection) setupSection.style.display = 'none';

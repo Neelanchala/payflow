@@ -56,19 +56,17 @@ async function request(method, endpoint, data = null) {
 
   // 🔴 Handle auth failure globally
  if (res.status === 401) {
-  console.warn("Unauthorized request");
+  console.warn("Unauthorized → clearing session");
 
-  // ❌ DO NOT nuke everything blindly
+  // CLEAR BOTH (IMPORTANT)
   localStorage.removeItem('token');
-
-  // optional: keep merchant_id for recovery
-  // localStorage.removeItem('merchant_id');
+  localStorage.removeItem('merchant_id');
 
   if (!window.location.pathname.includes('index.html')) {
     window.location.href = '/index.html';
   }
 
-  throw new Error("Session expired. Please login again.");
+  throw new Error("Session expired");
 }
 
   // ✅ Standard error handling
