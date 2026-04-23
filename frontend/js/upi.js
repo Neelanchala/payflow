@@ -230,7 +230,7 @@ async function loadCustomers() {
     select.innerHTML =
   '<option value="">No Customer (Manual)</option>' +
   customers.map(c => `
-    <option value="${c.id}">
+    <option value="${c.phone || ''}">
       ${escHtml(c.name)}${c.phone ? ' - ' + c.phone : ''}
     </option>
   `).join('');
