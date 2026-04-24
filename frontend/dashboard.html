@@ -43,37 +43,37 @@
 
       <div class="stat-card">
         <div class="stat-label">Total Revenue</div>
-        <div class="stat-value" id="total-revenue">₹0</div>
+        <div class="stat-value" id="total-revenue">—</div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Transactions</div>
-        <div class="stat-value" id="total-transactions">0</div>
+        <div class="stat-value" id="total-transactions">—</div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Avg Order</div>
-        <div class="stat-value" id="avg-order">₹0</div>
+        <div class="stat-value" id="avg-order">—</div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Expenses</div>
-        <div class="stat-value" id="total-expenses">₹0</div>
+        <div class="stat-value" id="total-expenses">—</div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Profit</div>
-        <div class="stat-value green" id="profit">₹0</div>
+        <div class="stat-value green" id="profit">—</div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Credit</div>
-        <div class="stat-value red" id="unpaid-count">0</div>
+        <div class="stat-value red" id="unpaid-count">—</div>
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Low Stock</div>
-        <div class="stat-value red" id="low-stock">0</div>
+        <div class="stat-value red" id="low-stock">—</div>
       </div>
 
     </div>
@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <!-- ACTIONS -->
+      <!-- QUICK ACTIONS -->
       <div class="card">
         <div class="card-title">Quick Actions</div>
 
@@ -125,13 +125,25 @@
         </div>
       </div>
 
-    </div>
+      <!-- GET STARTED -->
+      <div class="card" id="get-started-card">
+        <div class="card-title">Get Started</div>
 
-  </main>
+        <ol style="padding-left:20px; line-height:1.8;">
+          <li><a href="/inventory.html">Add your first product</a></li>
+          <li><a href="/customers.html">Add a customer</a></li>
+          <li><a href="/upi.html">Set your UPI ID</a></li>
+          <li>Send payment via QR or WhatsApp</li>
+        </ol>
+      </div>
 
-</div>
+    </div> <!-- content-grid -->
 
-<!-- SCRIPTS -->
+  </main> <!-- FIXED: properly closed -->
+
+</div> <!-- app-layout -->
+
+<!-- SCRIPTS (CORRECT POSITION) -->
 <script src="/js/api.js"></script>
 <script src="/js/authCheck.js"></script>
 <script src="/js/layout.js"></script>

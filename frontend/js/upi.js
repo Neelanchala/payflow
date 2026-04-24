@@ -5,10 +5,7 @@ const phoneFromSell = params.get("phone");
 const nameFromSell = params.get("name");
 
 // auto-fill amount
-if (amountFromSell) {
-  const amtInput = document.getElementById("upi-amount");
-  if (amtInput) amtInput.value = amountFromSell;
-}
+
 
 
 
@@ -17,6 +14,14 @@ document.addEventListener('DOMContentLoaded', init);
 async function init() {
   const merchant_id = api.getMerchantId();
   if (!merchant_id) return;
+
+  if (amountFromSell) {
+  const amtInput = document.getElementById("qr-amount")
+  if (amtInput) amtInput.value = amountFromSell;
+  }
+
+
+
 
   await loadUpiId(merchant_id);
   await loadCustomers();
@@ -131,7 +136,7 @@ async function loadUpiId(merchant_id) {
     if (display) {
       display.textContent = upi_id
         ? `Current UPI: ${upi_id}`
-        : 'No UPI ID set';
+        : 'Enter your UPI ID to receive payments';
     }
 
     if (input && upi_id) {
@@ -146,18 +151,22 @@ async function loadUpiId(merchant_id) {
 
 /* ================= CONFIRM PAYMENT ================= */
 async function confirmPayment(amount) {
+  let btn;
+
   try {
+    btn = document.querySelector('#qr-display button');
+    if (btn) btn.disabled = true;
+
     const merchant_id = api.getMerchantId();
     if (!merchant_id) return;
 
-    // ✅ GET SELECTED CUSTOMER
     const customerSelect = document.getElementById('upi-customer');
     const customer_id = customerSelect ? customerSelect.value || null : null;
 
     await api.post('/upi/confirm', {
       merchant_id,
       amount: Number(amount || 0),
-      customer_id   // ✅ THIS IS WHAT YOU WERE MISSING
+      customer_id
     });
 
     setSuccess('Payment confirmed and transaction recorded!');
@@ -170,6 +179,8 @@ async function confirmPayment(amount) {
 
   } catch (err) {
     setError(err.message);
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
@@ -178,12 +189,18 @@ function sendWhatsAppUPI() {
   const upi = document.getElementById('upi-input').value;
 
   const customerSelect = document.getElementById('upi-customer');
-  const phone = customerSelect.value;
 
-  if (!amount || !upi) {
-    alert("Generate QR first");
-    return;
-  }
+let phone = "";
+
+if (customerSelect && customerSelect.selectedIndex >= 0) {
+  const selected = customerSelect.options[customerSelect.selectedIndex];
+  phone = selected?.dataset?.phone || "";
+}
+
+ if (!amount || Number(amount) <= 0 || !upi) {
+  alert("Enter valid amount and UPI ID");
+  return;
+}
 
   const upiLink = `upi://pay?pa=${encodeURIComponent(upi)}&am=${Number(amount).toFixed(2)}&cu=INR`;
 
@@ -218,22 +235,25 @@ async function loadCustomers() {
     const merchant_id = api.getMerchantId();
     if (!merchant_id) return;
 
+    const select = document.getElementById('upi-customer');
+    if (!select) return;
+
+    // loading state
+    select.innerHTML = '<option>Loading...</option>';
+
     const customers = await api.get('/customers', {
       merchant_id
     });
 
     if (!Array.isArray(customers)) return;
 
-    const select = document.getElementById('upi-customer');
-    if (!select) return;
-
     select.innerHTML =
-  '<option value="">No Customer (Manual)</option>' +
-  customers.map(c => `
-    <option value="${c.phone || ''}">
-      ${escHtml(c.name)}${c.phone ? ' - ' + c.phone : ''}
-    </option>
-  `).join('');
+      '<option value="">No Customer (Manual)</option>' +
+      customers.map(c => `
+        <option value="${c.id}" data-phone="${c.phone || ''}">
+          ${escHtml(c.name)}${c.phone ? ' - ' + c.phone : ''}
+        </option>
+      `).join('');
 
   } catch (err) {
     console.error("UPI customer load error:", err);

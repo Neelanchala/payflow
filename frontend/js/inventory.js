@@ -2,9 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const merchantId = localStorage.getItem('merchant_id');
   const token = localStorage.getItem('token');
 
-  // 🔒 Strong auth check
   if (!merchantId || !token) {
-    console.warn("Auth missing → redirect");
     window.location.href = '/index.html';
     return;
   }
@@ -16,15 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ================= LOAD PRODUCTS ================= */
 async function loadProducts(merchantId) {
+  const grid = document.getElementById('inv-table-body');
+  if (!grid) return;
+
+  grid.innerHTML = `
+    <tr>
+      <td colspan="5" style="text-align:center;color:#888">
+        Loading...
+      </td>
+    </tr>
+  `;
+
   try {
     const products = await api.get('/inventory', {
       merchant_id: merchantId
     });
-
-    console.log("PRODUCTS:", products);
-
-    const grid = document.getElementById('inv-table-body');
-    if (!grid) return;
 
     if (!Array.isArray(products)) {
       throw new Error("Invalid product data");
@@ -33,8 +37,12 @@ async function loadProducts(merchantId) {
     if (products.length === 0) {
       grid.innerHTML = `
         <tr>
-          <td colspan="5" style="text-align:center;color:#888">
-            No products found
+          <td colspan="5" style="text-align:center;color:#888;padding:20px;">
+            <div>No products yet</div>
+            <div style="margin:10px 0;">Start by adding your first product</div>
+            <button class="btn btn-primary" onclick="document.getElementById('item-name').focus()">
+              Add Product
+            </button>
           </td>
         </tr>
       `;
@@ -58,16 +66,13 @@ async function loadProducts(merchantId) {
   } catch (err) {
     console.error("INVENTORY ERROR:", err);
 
-    const grid = document.getElementById('inv-table-body');
-    if (grid) {
-      grid.innerHTML = `
-        <tr>
-          <td colspan="5" style="text-align:center;color:red">
-            ${err.message}
-          </td>
-        </tr>
-      `;
-    }
+    grid.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center;color:red">
+          ${err.message}
+        </td>
+      </tr>
+    `;
   }
 }
 
@@ -79,6 +84,9 @@ function setupAddProduct(merchantId) {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    const btn = form.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = true;
 
     const name = document.getElementById('item-name').value.trim();
     const price = document.getElementById('item-price').value;
@@ -92,21 +100,33 @@ function setupAddProduct(merchantId) {
 
     if (!name || price === '' || quantity === '') {
       errorEl.textContent = "All fields are required";
+      if (btn) btn.disabled = false;
+      return;
+    }
+
+    const priceNum = Number(price);
+    const qtyNum = Number(quantity);
+
+    if (isNaN(priceNum) || isNaN(qtyNum)) {
+      errorEl.textContent = "Invalid number input";
+      if (btn) btn.disabled = false;
       return;
     }
 
     try {
+      successEl.textContent = "Adding...";
+
       await api.post('/inventory', {
         merchant_id: merchantId,
         name,
-        price: Number(price),
-        quantity: Number(quantity)
+        price: priceNum,
+        quantity: qtyNum
       });
-
-      successEl.textContent = "Product added successfully";
 
       form.reset();
       loadProducts(merchantId);
+
+      successEl.textContent = "Product added successfully";
 
       setTimeout(() => {
         successEl.textContent = '';
@@ -114,6 +134,8 @@ function setupAddProduct(merchantId) {
 
     } catch (err) {
       errorEl.textContent = err.message;
+    } finally {
+      if (btn) btn.disabled = false;
     }
   });
 }

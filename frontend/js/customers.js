@@ -48,6 +48,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /* ================= LOAD CUSTOMERS ================= */
 async function loadCustomers(merchantId) {
+  const grid = document.getElementById('cust-table-body');
+
+if (grid) {
+  grid.innerHTML = `
+    <tr>
+      <td colspan="5" style="text-align:center;color:#888">
+        Loading...
+      </td>
+    </tr>
+  `;
+}
+
   try {
     if (!merchantId) return;
 
@@ -63,13 +75,17 @@ async function loadCustomers(merchantId) {
     if (!tbody) return;
 
     if (!customers.length) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="5" style="text-align:center;color:#888">
-            No customers yet
-          </td>
-        </tr>
-      `;
+   tbody.innerHTML = `
+    <tr>
+      <td colspan="5" style="text-align:center;color:#888;padding:20px;">
+        <div>No customers yet</div>
+        <div style="margin:8px 0;">Start by adding your first customer</div>
+        <button class="btn btn-primary" onclick="document.getElementById('cust-name').focus()">
+          Add Customer
+        </button>
+      </td>
+    </tr>
+    `;
       return;
     }
 

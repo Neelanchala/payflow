@@ -51,52 +51,57 @@
       </div>
 
       <!-- QR GENERATION -->
-<div class="card">
-  <div class="card-title">Generate QR Payment</div>
+      <div class="card">
+        <div class="card-title">Generate QR Payment</div>
 
-  <form id="generate-qr-form">
+        <form id="generate-qr-form">
 
-    <!-- ✅ ADD THIS BLOCK HERE -->
-    <div class="form-group">
-      <label>Select Customer</label>
-      <select id="upi-customer" class="form-control">
-        <option value="">No Customer (Manual)</option>
-      </select>
-    </div>
+          <div class="form-group">
+            <label>Select Customer</label>
+            <select id="upi-customer" class="form-control">
+              <option value="">No Customer (Manual)</option>
+            </select>
+          </div>
 
-    <!-- EXISTING -->
-    <div class="form-group">
-      <label>Amount (₹)</label>
-      <input type="number" id="qr-amount" class="form-control"
-             step="0.01" min="1" required>
-    </div>
+          <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" id="qr-amount" class="form-control"
+                   step="0.01" min="1" required>
+          </div>
 
-    <button type="submit" class="btn btn-success btn-full">
-      Generate QR
-    </button>
-  </form>
+          <button type="submit" class="btn btn-success btn-full">
+            Generate QR
+          </button>
+        </form>
 
         <!-- QR DISPLAY -->
         <div id="qr-display" class="qr-box"
-     style="text-align:center;color:#888;padding:10px;">
-  QR will appear here
-</div>
+             style="text-align:center;color:#888;padding:10px;">
+          QR will appear here
+        </div>
 
-<!-- ✅ ADD THIS BUTTON RIGHT BELOW QR -->
-<div style="text-align:center; margin-top:10px;">
-  <button onclick="sendWhatsAppUPI()" class="btn btn-primary">
-    Send via WhatsApp
-  </button>
-</div>
+        <!-- WHATSAPP BUTTON -->
+        <div style="text-align:center; margin-top:10px;">
+          <button onclick="sendWhatsAppUPI()" class="btn btn-primary">
+            Send Payment via WhatsApp
+          </button>
+          <div style="margin-top:5px;">
+            <small style="color:#888;">
+              This will send payment link to customer
+            </small>
+          </div>
+        </div>
 
-      </div>
+      </div> <!-- ✅ CLOSE QR CARD -->
 
-    </div>
+    </div> <!-- ✅ CLOSE GRID -->
 
-  </main>
-</div>
+  </main> <!-- ✅ CLOSE MAIN -->
 
-<!-- SCRIPTS -->
+</div> <!-- ✅ CLOSE LAYOUT -->
+
+
+<!-- SCRIPTS (CORRECT POSITION) -->
 <script src="/js/api.js"></script>
 <script src="/js/authCheck.js"></script>
 <script src="/js/layout.js"></script>
@@ -104,16 +109,12 @@
 <script src="/js/theme.js"></script>
 
 <script>
-// Safe sidebar toggle
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   if (sidebar) sidebar.classList.toggle('open');
 }
 
-// Page-specific logic ONLY
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Active nav highlight
   const links = document.querySelectorAll('.sidebar-nav a');
 
   links.forEach(link => {
@@ -121,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
       link.classList.add('active');
     }
   });
-
 });
 </script>
 
