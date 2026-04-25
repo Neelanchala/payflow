@@ -59,6 +59,35 @@ SQLite Database
 
 -----------
 
+## 📸 Screenshots
+
+- Dashboard View
+
+<img width="1918" height="969" alt="image" src="https://github.com/user-attachments/assets/3a46cd3a-0b13-4590-85c8-ec12d9983084" />
+
+<img width="1918" height="971" alt="image" src="https://github.com/user-attachments/assets/7d90a1ea-7c97-41f5-beed-32633c095ba7" />
+
+- Inventory page
+
+<img width="1895" height="970" alt="image" src="https://github.com/user-attachments/assets/596868b3-1030-44c4-b822-5f935a93207d" />
+
+<img width="1868" height="931" alt="image" src="https://github.com/user-attachments/assets/4d48a8d8-1531-4272-afc3-481b6c951e0e" />
+
+- Sell page
+<img width="1919" height="969" alt="image" src="https://github.com/user-attachments/assets/5967d9bb-2c4e-4b7e-957e-99c5745ce2ab" />
+
+<img width="1919" height="942" alt="image" src="https://github.com/user-attachments/assets/f21b16b0-fde8-4d02-b4b8-ea7b729653f1" />
+
+- Payment QR interface
+
+<img width="1904" height="971" alt="image" src="https://github.com/user-attachments/assets/597541c0-a565-4e2d-b9b3-d73e6f2da75c" />
+
+<img width="1903" height="970" alt="image" src="https://github.com/user-attachments/assets/36795731-77ef-46f9-8547-a093ce48af5e" />
+
+
+
+------------
+
 ## ⚙️ Installation & Setup
 
 ###  Clone the repository
