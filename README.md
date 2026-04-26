@@ -1,17 +1,58 @@
 # PayFlow – Merchant Management & Payment System
 
+PayFlow is a simple merchant management system that helps small businesses track sales, manage customers, and collect payments using UPI.
+
+------
 ## 🚀 Live Demo
 👉 https://payflow-iuht.onrender.com  
 
 > ⚠️ Note: If the app takes time to load, it may be due to free-tier backend cold starts.
 
----
+-----
+🚨 Problem It Solves:
 
-## 📌 Overview
-PayFlow is a full-stack merchant dashboard designed to manage business operations including inventory, sales, customers, expenses, and UPI-based payments.  
-It provides real-time analytics and a unified interface for small business management.
+Small shop owners often:
 
----
+Don’t track daily sales properly
+Forget customer dues
+Have no simple digital system
+-----
+
+PayFlow solves this by providing a lightweight dashboard to manage everything in one place.
+
+👤 Who It’s For:
+
+Small shop owners
+Local vendors
+Students learning business/data systems
+Anyone needing a simple sales tracker
+
+------
+
+⚙️ Features 
+
+📊 Dashboard
+View total revenue, profit, expenses
+Track recent transactions
+Monitor low stock items
+📦 Inventory Management
+Add and manage products
+Track quantity and pricing
+👥 Customer Management
+Add customers
+Track purchases and dues
+💰 Sales System
+Record transactions
+Associate with customers
+📱 UPI Payments
+Save UPI ID
+Generate QR payment links
+Send payment via WhatsApp
+📤 Export Data
+Export transactions as CSV
+Export expenses as CSV
+
+----
 
 ## 🧠 Key Features
 - 🔐 Secure authentication using JWT + Google OAuth
