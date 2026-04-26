@@ -1,16 +1,26 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 /* ================= INIT GEMINI ================= */
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const apiKey = process.env.GEMINI_API_KEY;
+
+if (!apiKey) {
+console.warn("⚠️ GEMINI_API_KEY is not set");
+}
+
+const genAI = new GoogleGenerativeAI(apiKey);
 
 /* ================= GENERATE INSIGHTS ================= */
 async function generateInsights(data) {
 try {
-if (!process.env.GEMINI_API_KEY) {
+if (!apiKey) {
 throw new Error("Missing GEMINI_API_KEY");
 }
 
 ```
+if (!data) {
+  throw new Error("No data provided to AI");
+}
+
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash"
 });
@@ -39,20 +49,24 @@ Keep the response:
   `;
 
   const result = await model.generateContent(prompt);
-  const response = await result.response;
 
-  const text = response.text();
+  if (!result || !result.response) {
+  throw new Error("Invalid response from Gemini");
+  }
 
-  if (!text) {
-  throw new Error("Empty response from AI");
+  const text = result.response.text();
+
+  if (!text || text.trim().length === 0) {
+  throw new Error("Empty AI response");
   }
 
   return text;
 
   } catch (error) {
-  console.error("GEMINI SERVICE ERROR:", error.message);
+  console.error("🔥 GEMINI SERVICE ERROR:", error.message);
 
-  return "Unable to generate insights at the moment. Please try again.";
+  // ❗ IMPORTANT: let route handle it properly
+  throw error;
   }
   }
 

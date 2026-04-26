@@ -141,21 +141,34 @@ async function getInsights() {
       merchant_id: mid
     });
 
+    const token = localStorage.getItem("token");
+
     const res = await fetch("/api/ai/insights", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify(data)
     });
 
-    const result = await res.json();
+    let result;
+
+    try {
+      result = await res.json();
+    } catch (e) {
+      throw new Error("Invalid server response");
+    }
+
+    if (!res.ok) {
+      throw new Error(result.error || "AI request failed");
+    }
 
     output.innerText = result.insights || "No insights generated";
 
   } catch (err) {
     console.error("AI ERROR:", err);
-    output.innerText = "AI failed";
+    output.innerText = "AI failed: " + err.message;
   }
 }
 

@@ -9,8 +9,10 @@ try {
 const data = req.body;
 
 ```
-if (!data) {
+// ✅ Strong validation
+if (!data || Object.keys(data).length === 0) {
   return res.status(400).json({
+    success: false,
     error: "No data provided"
   });
 }
@@ -19,17 +21,18 @@ const insights = await generateInsights(data);
 
 return res.json({
   success: true,
-  insights
+  insights: insights || "No insights generated"
 });
 ```
 
 } catch (err) {
-console.error("AI ROUTE ERROR:", err);
+console.error("🔥 AI ROUTE ERROR:", err);
 
 ```
+// ✅ Return REAL error (critical)
 return res.status(500).json({
   success: false,
-  error: "AI generation failed"
+  error: err.message || "AI failed"
 });
 ```
 
