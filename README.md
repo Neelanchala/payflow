@@ -1,105 +1,94 @@
-# PayFlow – Merchant Management & Payment System
+# PayFlow — Lightweight Digital Ledger & Inventory System for Small Retailers
 
-PayFlow is a simple merchant management system that helps small businesses track sales, manage customers, and collect payments using UPI.
+PayFlow is a full-stack web application designed to help small shop owners manage daily business operations—sales, inventory, customers, and dues—without relying on complex or expensive software.
 
-------
-## 🚀 Live Demo
-👉 https://payflow-iuht.onrender.com  
-
-> ⚠️ Note: If the app takes time to load, it may be due to free-tier backend cold starts.
-
------
-🚨 Problem It Solves:
-
-Small shop owners often:
-
-Don’t track daily sales properly
-Forget customer dues
-Have no simple digital system
------
-
-PayFlow solves this by providing a lightweight dashboard to manage everything in one place.
-
-👤 Who It’s For:
-
-Small shop owners
-Local vendors
-Students learning business/data systems
-Anyone needing a simple sales tracker
-
-------
-
-⚙️ Features 
-
-📊 Dashboard
-View total revenue, profit, expenses
-Track recent transactions
-Monitor low stock items
-📦 Inventory Management
-Add and manage products
-Track quantity and pricing
-👥 Customer Management
-Add customers
-Track purchases and dues
-💰 Sales System
-Record transactions
-Associate with customers
-📱 UPI Payments
-Save UPI ID
-Generate QR payment links
-Send payment via WhatsApp
-📤 Export Data
-Export transactions as CSV
-Export expenses as CSV
-
-----
-
-## 🧠 Key Features
-- 🔐 Secure authentication using JWT + Google OAuth
-- 📦 Inventory management with real-time stock updates  
-- 💳 UPI payment integration with QR code generation  
-- 📊 Real-time analytics (daily, weekly, monthly insights)  
-- 👥 Customer management with credit tracking  
-- 💰 Expense tracking with automatic profit calculation  
-- 📤 Export data as CSV reports  
-- 🔔 Notification system (low stock alerts, reminders)  
-- 📱 Responsive dashboard UI  
+It focuses on simplicity, speed, and real-world usability for local merchants who primarily operate with cash and UPI payments.
 
 ---
 
-## 🛠 Tech Stack
+## 🚀 Live Demo
 
-**Frontend**
-- HTML, CSS, JavaScript (Vanilla)
+https://payflow-iuht.onrender.com
 
-**Backend**
-- Node.js, Express.js  
+> Note: The backend is hosted on a free tier and may take ~30–60 seconds to wake up after inactivity.
 
-**Database**
-- SQLite  
+---
 
-**Authentication**
-- JWT  
-- Google OAuth  
+## 📌 Problem Statement
 
-**Payments**
-- UPI Deep Links  
-- QR Code Generation  
+Small retailers and local vendors often face these issues:
 
-**Tools & APIs**
-- REST APIs  
-- Fetch API  
-- LocalStorage
+* No structured way to track daily sales
+* Difficulty managing customer credit (udhaar)
+* Manual inventory tracking leading to stock errors
+* Lack of simple, affordable digital tools
 
+Most existing solutions are either:
 
-Client (Frontend)
-↓
-REST API (Express Server)
-↓
-SQLite Database
+* Too complex
+* Mobile-only with limited flexibility
+* Not tailored for lightweight usage
 
------------
+---
 
+## 💡 Solution
+
+PayFlow provides a **minimal, web-based business management system** that allows shop owners to:
+
+* Record sales transactions quickly
+* Track customer dues and payments
+* Manage product inventory
+* Generate UPI payment requests via QR codes
+* View basic business insights
+
+---
+
+## 👤 Target Users
+
+* Small shop owners
+* Local vendors
+* Independent sellers
+* Students exploring business/data systems
+
+---
+
+## ⚙️ Core Features
+
+### 📊 Dashboard
+
+* Overview of revenue, expenses, and profit
+* Recent transaction history
+* Low-stock indicators
+
+### 📦 Inventory Management
+
+* Add/edit/delete products
+* Track stock levels
+* Update pricing
+
+### 👥 Customer Management
+
+* Maintain customer records
+* Track credit and payment history
+
+### 💰 Sales System
+
+* Record transactions
+* Associate sales with customers
+* Automatic stock updates
+
+### 📱 UPI Payment Requests
+
+* Generate QR codes using UPI ID
+* Share payment links (e.g., via WhatsApp)
+* No direct payment processing (client-side UPI flow)
+
+### 📤 Data Export
+
+* Export transactions as CSV
+* Export expenses as CSV
+
+---
 ## 📸 Screenshots
 
 - Dashboard View
@@ -140,57 +129,112 @@ SQLite Database
 <img width="1903" height="970" alt="image" src="https://github.com/user-attachments/assets/36795731-77ef-46f9-8547-a093ce48af5e" />
 
 
+-----
+## 🧱 System Architecture
 
-------------
-
-## ⚙️ Installation & Setup
-
-###  Clone the repository
-```bash
-git clone https://github.com/Neelanchala/payflow.git
-cd payflow
-
-Install dependencies
-npm install
-
-Start the server
-node server.js
-
-Open in browser
-http://localhost:3000
-
-
-📂 Project Structure
-/routes        → API routes  
-/controllers   → Business logic  
-/models        → Database logic  
-/middleware    → Auth & validation  
-/public        → Frontend files  
+Client (Frontend)
+↓
+REST API (Node.js + Express)
+↓
+SQLite Database
 
 ---
 
-📈 Future Improvements
-Role-based access control (admin/staff)
-Cloud database (PostgreSQL / MongoDB)
-Payment gateway integration (Razorpay / Stripe)
-Mobile app version
+## 🛠 Tech Stack
 
+### Frontend
 
-🧪 Key Learnings
-Designing scalable REST APIs
-Implementing authentication flows (JWT & OAuth)
-Managing real-time data updates
-Structuring full-stack applications
+* HTML
+* CSS
+* Vanilla JavaScript
 
+### Backend
 
-⚠️ Honest Limitations
-Hosted on free tier → may have cold start delays
-Not optimized for high-scale production yet
+* Node.js
+* Express.js
 
+### Database
 
+* SQLite
 
-📬 Contact
+### Authentication
+
+* JWT-based authentication
+* Google OAuth integration
+
+### Integrations
+
+* UPI deep links
+* QR code generation
+
+---
+
+## 🔐 Authentication Flow
+
+* User login via JWT or Google OAuth
+* Token-based session handling
+* Protected API routes
+
+> Note: Basic implementation. Not production-hardened (no refresh tokens or advanced security layers).
+
+---
+
+## 📡 API Design
+
+* RESTful architecture
+* Route separation using controllers
+* Middleware for authentication and validation
+
+Example:
+
+GET /api/products
+POST /api/sales
+GET /api/customers
+
+---
+
+## 📂 Project Structure
+
+/routes        → API endpoints
+/controllers   → Business logic
+/models        → Database interactions
+/middleware    → Auth & validation
+/public        → Frontend assets
+
+---
+
+## ⚠️ Limitations
+
+* SQLite limits concurrent multi-user scalability
+* No real payment verification (UPI handled externally)
+* Basic authentication (no refresh tokens, rate limiting)
+* Hosted on free tier (cold starts, limited performance)
+
+---
+
+## 📈 Future Improvements
+
+* Role-based access (admin/staff)
+* Migration to PostgreSQL or MongoDB
+* Payment gateway integration (Razorpay/Stripe)
+* Mobile-first redesign
+* Offline support for low-connectivity environments
+
+---
+
+## 🧪 Key Learnings
+
+* Designing and structuring REST APIs
+* Implementing authentication (JWT + OAuth)
+* Managing full-stack data flow
+* Building end-to-end deployable applications
+
+---
+
+## 📬 Contact
 
 Neelanchala Nayak
-📧 nayakneelanchala2007@gmail.com
-🔗 https://github.com/Neelanchala
+Email: [nayakneelanchala2007@gmail.com](mailto:nayakneelanchala2007@gmail.com)
+GitHub: https://github.com/Neelanchala
+
+---
