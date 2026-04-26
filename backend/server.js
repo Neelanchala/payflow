@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const app = express();
 
+const aiRoutes = require('./routes/aiRoutes');
 /* ================= PORT FIX ================= */
 const PORT = process.env.PORT || 3000;
 
@@ -56,6 +57,7 @@ app.use('/api/credit', creditRoutes);
 app.use('/api/upi', upiRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/export', exportRoutes);
+app.use('/api/ai', aiRoutes);
 
 /* ================= STATIC FRONTEND ================= */
 

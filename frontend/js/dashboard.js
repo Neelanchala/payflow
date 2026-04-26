@@ -123,7 +123,41 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
 });
+/* ================= AI ================= */
+async function getInsights() {
+  const output = document.getElementById("aiOutput");
+  if (!output) return;
 
+  try {
+    output.innerText = "Generating insights...";
+
+    const mid = api.getMerchantId();
+    if (!mid) {
+      output.innerText = "No merchant ID";
+      return;
+    }
+
+    const data = await api.get('/dashboard', {
+      merchant_id: mid
+    });
+
+    const res = await fetch("/api/ai/insights", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    output.innerText = result.insights || "No insights generated";
+
+  } catch (err) {
+    console.error("AI ERROR:", err);
+    output.innerText = "AI failed";
+  }
+}
 
 /* ================= SAFE TEXT ================= */
 function setText(id, value) {
