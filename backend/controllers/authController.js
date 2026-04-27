@@ -17,58 +17,56 @@ process.env.JWT_SECRET || "dev_secret",
 
 /* ================= GOOGLE LOGIN ================= */
 exports.googleLogin = async (req, res) => {
-try {
-const { credential } = req.body;
+  try {
+    const { credential } = req.body;
 
-```
-const ticket = await client.verifyIdToken({
-  idToken: credential,
-  audience: GOOGLE_CLIENT_ID
-});
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: GOOGLE_CLIENT_ID
+    });
 
-const payload = ticket.getPayload();
+    const payload = ticket.getPayload();
 
-// 🔥 ADD THESE LOGS
-console.log("========= GOOGLE DEBUG =========");
-console.log("TOKEN AUD:", payload.aud);
-console.log("ENV CLIENT:", GOOGLE_CLIENT_ID);
-console.log("EMAIL:", payload.email);
-console.log("================================");
+    // 🔥 DEBUG (correct placement)
+    console.log("========= GOOGLE DEBUG =========");
+    console.log("TOKEN AUD:", payload.aud);
+    console.log("ENV CLIENT:", GOOGLE_CLIENT_ID);
+    console.log("EMAIL:", payload.email);
+    console.log("================================");
 
-const payload = ticket.getPayload();
-const id = payload.sub;
+    const id = payload.sub;
 
-let user = await db.getAsync(
-  "SELECT * FROM merchants WHERE id = ?",
-  [id]
-);
+    let user = await db.getAsync(
+      "SELECT * FROM merchants WHERE id = ?",
+      [id]
+    );
 
-if (!user) {
-  await db.runAsync(
-    "INSERT INTO merchants (id, shop_name) VALUES (?, ?)",
-    [id, payload.name || payload.email]
-  );
+    if (!user) {
+      await db.runAsync(
+        "INSERT INTO merchants (id, shop_name) VALUES (?, ?)",
+        [id, payload.name || payload.email]
+      );
 
-  user = { id, shop_name: payload.name || payload.email };
-}
+      user = { id, shop_name: payload.name || payload.email };
+    }
 
-return res.json({
-  success: true,
-  user: {
-    merchant_id: user.id,
-    shop_name: user.shop_name,
-    hasPassword: !!user.password
+    return res.json({
+      success: true,
+      user: {
+        merchant_id: user.id,
+        shop_name: user.shop_name,
+        hasPassword: !!user.password
+      }
+    });
+
+  } catch (err) {
+    console.error("GOOGLE LOGIN ERROR:", err.message);
+
+    return res.status(401).json({
+      success: false,
+      error: err.message || "Invalid Google token"
+    });
   }
-});
-```
-
-} catch (err) {
-console.error("GOOGLE LOGIN ERROR:", err);
-return res.status(401).json({
-success: false,
-error: "Invalid Google token"
-});
-}
 };
 
 /* ================= SETUP ================= */

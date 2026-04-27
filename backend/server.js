@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log("SERVER CLIENT:", process.env.GOOGLE_CLIENT_ID);
 console.log("GEMINI KEY =", process.env.GEMINI_API_KEY);
 const express = require('express');
 const path = require('path');
