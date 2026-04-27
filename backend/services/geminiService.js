@@ -1,73 +1,51 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-/* ================= INIT GEMINI ================= */
-const apiKey = process.env.GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-if (!apiKey) {
-console.warn("⚠️ GEMINI_API_KEY is not set");
-}
-
-const genAI = new GoogleGenerativeAI(apiKey);
-
-/* ================= GENERATE INSIGHTS ================= */
 async function generateInsights(data) {
-try {
-if (!apiKey) {
-throw new Error("Missing GEMINI_API_KEY");
-}
+  try {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY missing");
+    }
 
-```
-if (!data) {
-  throw new Error("No data provided to AI");
-}
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+    });
 
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash"
-});
+    const prompt = `
+You are a business assistant.
 
-const prompt = `
-```
-
-You are a business assistant for a small shop owner.
-
-Analyze the following business data:
+Analyze this data:
 ${JSON.stringify(data)}
 
-Provide:
+Give:
+1. Top products
+2. Weak products
+3. Insights
+4. Suggestions
+5. Restock advice
 
-1. Top selling products
-2. Low performing products
-3. Key business insights
-4. Suggestions to improve sales
-5. Inventory restock advice
+Keep it short and practical.
+`;
 
-Keep the response:
+    const result = await model.generateContent(prompt);
 
-* Short
-* Practical
-* Easy to understand
-  `;
+    if (!result || !result.response) {
+      throw new Error("Invalid Gemini response");
+    }
 
-  const result = await model.generateContent(prompt);
+    const text = result.response.text();
 
-  if (!result || !result.response) {
-  throw new Error("Invalid response from Gemini");
+    if (!text) {
+      throw new Error("Empty AI response");
+    }
+
+    return text;
+
+  } catch (err) {
+    console.error("🔥 GEMINI ERROR:", err.message);
+    throw err; // ❗ IMPORTANT → let route catch it
   }
-
-  const text = result.response.text();
-
-  if (!text || text.trim().length === 0) {
-  throw new Error("Empty AI response");
-  }
-
-  return text;
-
-  } catch (error) {
-  console.error("🔥 GEMINI SERVICE ERROR:", error.message);
-
-  // ❗ IMPORTANT: let route handle it properly
-  throw error;
-  }
-  }
+}
 
 module.exports = { generateInsights };
