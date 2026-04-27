@@ -8,11 +8,11 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 /* ================= TOKEN ================= */
 function generateToken(merchant_id, shop_name) {
-return jwt.sign(
-{ merchant_id, shop_name },
-process.env.JWT_SECRET || "dev_secret",
-{ expiresIn: '7d' }
-);
+  return jwt.sign(
+    { merchant_id, shop_name },
+    process.env.JWT_SECRET || "dev_secret",
+    { expiresIn: '7d' }
+  );
 }
 
 /* ================= GOOGLE LOGIN ================= */
@@ -71,85 +71,81 @@ exports.googleLogin = async (req, res) => {
 
 /* ================= SETUP ================= */
 exports.setup = async (req, res) => {
-try {
-const { merchant_id, shop_name, password } = req.body;
+  try {
+    const { merchant_id, shop_name, password } = req.body;
 
-```
-if (!merchant_id || !password) {
-  return res.status(400).json({
-    success: false,
-    error: "Missing data"
-  });
-}
+    if (!merchant_id || !password) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing data"
+      });
+    }
 
-const hashed = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
-await db.runAsync(
-  "UPDATE merchants SET shop_name = ?, password = ? WHERE id = ?",
-  [shop_name, hashed, merchant_id]
-);
+    await db.runAsync(
+      "UPDATE merchants SET shop_name = ?, password = ? WHERE id = ?",
+      [shop_name, hashed, merchant_id]
+    );
 
-const token = generateToken(merchant_id, shop_name);
+    const token = generateToken(merchant_id, shop_name);
 
-return res.json({
-  success: true,
-  token
-});
-```
+    return res.json({
+      success: true,
+      token
+    });
 
-} catch (err) {
-console.error("SETUP ERROR:", err);
-return res.status(500).json({
-success: false,
-error: err.message
-});
-}
+  } catch (err) {
+    console.error("SETUP ERROR FULL:", err);
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
 };
 
 /* ================= LOGIN ================= */
 exports.login = async (req, res) => {
-try {
-const { merchant_id, password } = req.body;
+  try {
+    const { merchant_id, password } = req.body;
 
-```
-const user = await db.getAsync(
-  "SELECT * FROM merchants WHERE id = ?",
-  [merchant_id]
-);
+    const user = await db.getAsync(
+      "SELECT * FROM merchants WHERE id = ?",
+      [merchant_id]
+    );
 
-if (!user || !user.password) {
-  return res.status(400).json({
-    success: false,
-    error: "User not setup"
-  });
-}
+    if (!user || !user.password) {
+      return res.status(400).json({
+        success: false,
+        error: "User not setup"
+      });
+    }
 
-const valid = await bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(password, user.password);
 
-if (!valid) {
-  return res.status(401).json({
-    success: false,
-    error: "Wrong password"
-  });
-}
+    if (!valid) {
+      return res.status(401).json({
+        success: false,
+        error: "Wrong password"
+      });
+    }
 
-const token = generateToken(user.id, user.shop_name);
+    const token = generateToken(user.id, user.shop_name);
 
-return res.json({
-  success: true,
-  token,
-  user: {
-    merchant_id: user.id,
-    shop_name: user.shop_name
+    return res.json({
+      success: true,
+      token,
+      user: {
+        merchant_id: user.id,
+        shop_name: user.shop_name
+      }
+    });
+
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
   }
-});
-```
-
-} catch (err) {
-console.error("LOGIN ERROR:", err);
-return res.status(500).json({
-success: false,
-error: err.message
-});
-}
 };

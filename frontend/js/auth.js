@@ -149,12 +149,13 @@ if (merchantId && token) {
           })
         });
 
-        let json;
+        let json = {};
         try {
-          json = await res.json();
-        } catch {
-          throw new Error("Invalid server response");
-        }
+       json = await res.json();
+       } catch (e) {
+       console.error("RAW RESPONSE FAILED");
+       throw new Error("Server crashed (not JSON)");
+       }
 
         if (!res.ok || !json.success) throw new Error(json?.error);
 

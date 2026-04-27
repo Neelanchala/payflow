@@ -95,15 +95,13 @@ db.allAsync = (sql, params = []) =>
     });
   });
 
-db.runAsync = (sql, params = []) =>
-  new Promise((resolve, reject) => {
+db.runAsync = (sql, params = []) => {
+  return new Promise((resolve, reject) => {
     db.run(sql, params, function (err) {
       if (err) reject(err);
-      else resolve({
-        lastID: this.lastID,
-        changes: this.changes
-      });
+      else resolve(this);
     });
   });
+};
 
 module.exports = db;
