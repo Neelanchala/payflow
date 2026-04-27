@@ -27,6 +27,15 @@ const ticket = await client.verifyIdToken({
 });
 
 const payload = ticket.getPayload();
+
+// 🔥 ADD THESE LOGS
+console.log("========= GOOGLE DEBUG =========");
+console.log("TOKEN AUD:", payload.aud);
+console.log("ENV CLIENT:", GOOGLE_CLIENT_ID);
+console.log("EMAIL:", payload.email);
+console.log("================================");
+
+const payload = ticket.getPayload();
 const id = payload.sub;
 
 let user = await db.getAsync(
