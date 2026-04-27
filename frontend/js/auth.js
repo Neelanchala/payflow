@@ -66,7 +66,7 @@ if (merchantId && token) {
     if (!window.google || !google.accounts) return;
 
     google.accounts.id.initialize({
-      client_id: window.GOOGLE_CLIENT_ID || "", // ✅ safer
+      client_id: "840729148521-12com6cmddb3mpk6hilr57lop4sfcrd5.apps.googleusercontent.com", // ✅ safer
       callback: handleGoogleLogin
     });
 
