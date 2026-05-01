@@ -38,7 +38,19 @@ document.addEventListener('DOMContentLoaded', async () => {
           status,
           customer_id
         });
+        // 👉 redirect to UPI page with customer info
+        if (status === "UNPAID (Credit)" && customer_id) {
+          const customer = customersData.find(c => c.id == customer_id);
 
+          const total = result.total;
+
+          window.location.href =
+            `/upi.html?amount=${total}` +
+            `&phone=${customer?.phone || ''}` +
+            `&name=${encodeURIComponent(customer?.name || '')}`;
+
+          return; // stop further execution
+        }
         successEl.textContent =
           `Sale recorded! ${result.product_name} x${result.quantity} = ₹${result.total.toFixed(2)} (${result.transaction.status})`;
 

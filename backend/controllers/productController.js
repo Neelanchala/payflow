@@ -5,8 +5,9 @@ const { LOW_STOCK_THRESHOLD } = require('../config/constants');
 /* ================= ADD PRODUCT ================= */
 async function addProduct(req, res) {
   try {
-    const merchant_id = req.user.merchant_id; // ✅ FIXED
-    const { name, price, quantity } = req.body;
+    const { merchant_id, name, price, quantity } = req.body;
+
+    if (!merchant_id) return errorResponse(res, 'merchant_id is required', 400);
 
     const cleanName = name ? name.trim() : '';
     if (!cleanName) return errorResponse(res, 'name is required', 400);
@@ -54,7 +55,11 @@ async function addProduct(req, res) {
 /* ================= GET PRODUCTS ================= */
 async function getProducts(req, res) {
   try {
-    const merchant_id = req.user.merchant_id; // ✅ FIXED
+    const { merchant_id } = req.query;
+
+    if (!merchant_id) {
+      return errorResponse(res, 'merchant_id is required', 400);
+    }
 
     const products = await db.allAsync(
       'SELECT * FROM inventory WHERE merchant_id = ? ORDER BY name ASC',
@@ -71,13 +76,10 @@ async function getProducts(req, res) {
 /* ================= UPDATE PRODUCT ================= */
 async function updateProduct(req, res) {
   try {
-    const merchant_id = req.user.merchant_id; // ✅ FIXED
     const { id } = req.params;
-    const { name, price, quantity } = req.body;
+    const { merchant_id, name, price, quantity } = req.body;
 
-    if (!id || isNaN(id)) {
-      return errorResponse(res, 'Invalid product id', 400);
-    }
+    if (!merchant_id) return errorResponse(res, 'merchant_id is required', 400);
 
     const product = await db.getAsync(
       'SELECT * FROM inventory WHERE id = ? AND merchant_id = ?',
@@ -101,6 +103,7 @@ async function updateProduct(req, res) {
       [newName, newPrice, newQty, id, merchant_id]
     );
 
+    // 🔥 Prevent notification spam (only trigger when crossing threshold)
     if (product.quantity >= LOW_STOCK_THRESHOLD && newQty < LOW_STOCK_THRESHOLD) {
       await db.runAsync(
         'INSERT INTO notifications (merchant_id, message) VALUES (?, ?)',
@@ -126,12 +129,10 @@ async function updateProduct(req, res) {
 /* ================= DELETE PRODUCT ================= */
 async function deleteProduct(req, res) {
   try {
-    const merchant_id = req.user.merchant_id; // ✅ FIXED
     const { id } = req.params;
+    const { merchant_id } = req.query;
 
-    if (!id || isNaN(id)) {
-      return errorResponse(res, 'Invalid product id', 400);
-    }
+    if (!merchant_id) return errorResponse(res, 'merchant_id is required', 400);
 
     const product = await db.getAsync(
       'SELECT * FROM inventory WHERE id = ? AND merchant_id = ?',
